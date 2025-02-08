@@ -1,8 +1,12 @@
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 
 import classes from './MainNavigation.module.css';
 
 const MainNavigation = () => {
+  const hasToken = localStorage.getItem('user');
+  // const user = hasToken ? JSON.parse(hasToken) : null; 
+  const navigate=useNavigate()
+
   return (
     <header className={classes.header}>
       <Link to='/'>
@@ -10,15 +14,27 @@ const MainNavigation = () => {
       </Link>
       <nav>
         <ul>
-          <li>
-            <Link to='/auth'>Login</Link>
-          </li>
-          <li>
-            <Link to='/profile'>Profile</Link>
-          </li>
-          <li>
-            <button>Logout</button>
-          </li>
+          {!hasToken && (
+            <li>
+              <Link to='/auth'>Login</Link>
+            </li>
+          )}
+          {hasToken && (
+            <>
+              <li>
+                <Link to='/profile'>Profile</Link>
+              </li>
+              <li>
+                <button onClick={() => { 
+                  localStorage.removeItem('user'); 
+                 navigate('/');
+                 window.location.reload()
+                }}>
+                  Logout
+                </button>
+              </li>
+            </>
+          )}
         </ul>
       </nav>
     </header>
