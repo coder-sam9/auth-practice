@@ -6,6 +6,11 @@ const MainNavigation = () => {
   const hasToken = localStorage.getItem('user');
   // const user = hasToken ? JSON.parse(hasToken) : null; 
   const navigate=useNavigate()
+  const logOutHandler=() => { 
+    localStorage.removeItem('user'); 
+   navigate('/');
+   window.location.reload();
+  }
 
   return (
     <header className={classes.header}>
@@ -25,11 +30,7 @@ const MainNavigation = () => {
                 <Link to='/profile'>Profile</Link>
               </li>
               <li>
-                <button onClick={() => { 
-                  localStorage.removeItem('user'); 
-                 navigate('/');
-                 window.location.reload()
-                }}>
+                <button onClick={logOutHandler}>
                   Logout
                 </button>
               </li>

@@ -7,15 +7,15 @@ import { useNavigate } from 'react-router-dom';
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const enteredEmail=useRef(null);
-  const enteredPassword=useRef(null);
+  const [enteredEmail,setEnteredEmail]=useState('');
+  const [enteredPassword,setEnteredPassword]=useState('');
   const navigate=useNavigate()
 
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
   };
   const onLogin = async () => {
-    if (enteredPassword.current.value.length < 6) {
+    if (enteredPassword.length < 6) {
         return alert("Enter a password with at least 6 characters");
     }
     
@@ -24,17 +24,21 @@ const AuthForm = () => {
     try {
         // Wait for the response
         const response = await login({
-            email: enteredEmail.current.value,
-            password: enteredPassword.current.value
+            email: enteredEmail,
+            password: enteredPassword
         });
 
-        console.log("Response from the login:", response);
+        console.log("Response from the login:", response.response);
         if(!response.success){
           alert(response.message);
           return;
         }
         // Store response as a string
-        localStorage.setItem('user', JSON.stringify(response));
+        localStorage.setItem('user', JSON.stringify(response.response));
+        const currentTime = new Date().getTime();
+        localStorage.setItem('loginTime', currentTime);
+        setEnteredEmail('');
+        setEnteredPassword('')
         navigate('/');
 
         window.location.reload()
@@ -48,7 +52,7 @@ const AuthForm = () => {
 };
 
 const onSignUp = async () => {
-    if (enteredPassword.current.value.length < 6) {
+    if (enteredPassword.length < 6) {
         return alert("Enter a password with at least 6 characters");
     }
 
@@ -57,8 +61,8 @@ const onSignUp = async () => {
     try {
         // Wait for the response
         const response = await signUp({
-            email: enteredEmail.current.value,
-            password: enteredPassword.current.value
+            email: enteredEmail,
+            password: enteredPassword
         });
 
         console.log("Response from the signUp:", response);
@@ -68,6 +72,10 @@ const onSignUp = async () => {
         }
         // Store response as a string
         localStorage.setItem('user', JSON.stringify(response));
+        const currentTime = new Date().getTime();
+        localStorage.setItem('loginTime', currentTime);
+        setEnteredEmail('');
+        setEnteredPassword('');
         navigate('/');
 
         window.location.reload();
@@ -87,7 +95,7 @@ const onSignUp = async () => {
       <form >
         <div className={classes.control}>
           <label htmlFor='email'>Your Email</label>
-          <input type='email' id='email' required ref={enteredEmail} />
+          <input type='email' id='email' required value={enteredEmail} autoComplete='off' onChange={(e)=>setEnteredEmail(e.target.value)} />
         </div>
         <div className={classes.control}>
           <label htmlFor='password'>Your Password</label>
@@ -95,7 +103,7 @@ const onSignUp = async () => {
             type='password'
             id='password'
             required
-            ref={enteredPassword}
+            value={enteredPassword} autoComplete='off' onChange={(e)=>setEnteredPassword(e.target.value)}
           />
         </div>
         {!isLoading ?(<div className={classes.actions}>

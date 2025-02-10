@@ -21,7 +21,7 @@ const login = async (item) => {
       }
   
       console.log("Login response:", jsonResponse);
-      return jsonResponse;
+      return {success:true,response:jsonResponse};
     } catch (error) {
       console.error("Login error:", error.message);
       return { success: false, message: error.message };
@@ -46,7 +46,7 @@ const login = async (item) => {
       }
   
       console.log("Signup response:", jsonResponse);
-      return jsonResponse;
+      return {success:true,response:jsonResponse};
     } catch (error) {
       console.error("Signup error:", error.message);
       return { success: false, message: error.message };
