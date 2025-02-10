@@ -1,4 +1,4 @@
-const apiKey='?key=AIzaSyD-uI-eMLHi5SwjimfEymOO5b_8lh2Y7Mk';
+const apiKey='';
 const baseUrl=`https://identitytoolkit.googleapis.com/v1/accounts:`
 const login = async (item) => {
     try {
